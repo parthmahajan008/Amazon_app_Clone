@@ -16,6 +16,14 @@ class SearchedProduct extends StatefulWidget {
 class _SearchedProductState extends State<SearchedProduct> {
   @override
   Widget build(BuildContext context) {
+    double totalRating = 0;
+    for (int i = 0; i < widget.product.rating!.length; i++) {
+      totalRating += widget.product.rating![i].rating;
+    }
+    double avgRating = 0.0;
+    if (totalRating != 0) {
+      avgRating = totalRating / widget.product.rating!.length;
+    }
     return Column(
       children: [
         Container(
@@ -24,7 +32,7 @@ class _SearchedProductState extends State<SearchedProduct> {
             children: [
               Image.network(
                 widget.product.images[0],
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.fitHeight,
                 height: 135,
                 width: 135,
               ),
@@ -42,7 +50,7 @@ class _SearchedProductState extends State<SearchedProduct> {
                   Container(
                     width: 235,
                     padding: const EdgeInsets.only(left: 10, top: 5),
-                    child: Stars(rating: 4),
+                    child: Stars(rating: avgRating.toDouble()),
                   ),
                   Container(
                     width: 235,
@@ -62,7 +70,7 @@ class _SearchedProductState extends State<SearchedProduct> {
                   Container(
                     width: 235,
                     padding: const EdgeInsets.only(left: 10, top: 5),
-                    child: const Text(
+                    child: Text(
                       'In stock',
                       style: TextStyle(color: Colors.teal),
                       maxLines: 2,

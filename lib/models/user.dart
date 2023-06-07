@@ -9,7 +9,6 @@ class User {
   final String address;
   final String type;
   final String token;
-
   User({
     required this.id,
     required this.name,
