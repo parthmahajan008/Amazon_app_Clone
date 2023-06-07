@@ -10,9 +10,14 @@ class UserProvider extends ChangeNotifier {
     address: '',
     type: '',
     token: '',
+    cart: [],
   );
 
   User get user => _user; //coz _user is a private variable we create a getter
+  void setUserFromModel(User user) {
+    _user = user;
+    notifyListeners();
+  }
 
   void setUser(String user) {
     //we use a string user as parameter coz req.body will be a string

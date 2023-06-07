@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const authRouter = require("./routes/auth.js");
 const adminRouter = require("./routes/admin.js");
 const productRouter = require("./routes/product.js");
-
+const userRouter = require("./routes/user.js");
 //INIT
 const PORT = 3000;
 const app = express();
@@ -18,6 +18,7 @@ app.use(express.json()); //returns a middleware that parses json and only looks 
 app.use(authRouter);
 app.use(adminRouter);
 app.use(productRouter);
+app.use(userRouter);
 // connections
 mongoose
   .connect(DB)

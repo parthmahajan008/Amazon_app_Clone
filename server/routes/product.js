@@ -1,7 +1,7 @@
 //to fetch all products of certain category
 const express = require("express");
 const productRouter = express.Router();
-const Product = require("../models/product");
+const {Product} = require("../models/product");
 const auth = require("../middlewares/auth");
 
 // /api/products?category=Essentials       //req.query.category  //using this here
