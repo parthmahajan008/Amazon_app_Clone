@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 //IMPORTS from FILES
 const authRouter = require("./routes/auth.js");
 const adminRouter = require("./routes/admin.js");
+const productRouter = require("./routes/product.js");
 
 //INIT
 const PORT = 3000;
@@ -16,6 +17,7 @@ app.use(express.json()); //returns a middleware that parses json and only looks 
 //  where the Content-Type header matches the type option
 app.use(authRouter);
 app.use(adminRouter);
+app.use(productRouter);
 // connections
 mongoose
   .connect(DB)

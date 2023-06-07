@@ -1,26 +1,43 @@
 import 'package:amazon_clone_27may/constants/global_variables.dart';
+import 'package:amazon_clone_27may/constants/loader.dart';
 import 'package:amazon_clone_27may/features/home/widgets/address_box.dart';
-import 'package:amazon_clone_27may/features/home/widgets/carousel_image.dart';
-import 'package:amazon_clone_27may/features/home/widgets/deal_of_the_day.dart';
-import 'package:amazon_clone_27may/features/home/widgets/top_categories.dart';
-import 'package:amazon_clone_27may/features/search/screens/search_screen.dart';
+import 'package:amazon_clone_27may/features/product_details/screens/product_details_screen.dart';
+import 'package:amazon_clone_27may/features/search/services/search_services.dart';
+import 'package:amazon_clone_27may/features/search/widget/searched_product.dart';
+import 'package:amazon_clone_27may/models/product.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const String routeName = "/home";
-  const HomeScreen({super.key});
+class SearchScreen extends StatefulWidget {
+  static const String routeName = '/search-screen';
+  final String searchQuery;
+  const SearchScreen({super.key, required this.searchQuery});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  void NavigateToSearchScreen(String query) {
-    Navigator.pushNamed(context, SearchScreen.routeName,arguments: query);
+class _SearchScreenState extends State<SearchScreen> {
+  List<Product>? products;
+  final SearchServices searchServices = SearchServices();
+  fetchSearchedProduct() async {
+    products = await searchServices.fetchSearchedProduct(
+        context: context, searchQuery: widget.searchQuery);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchSearchedProduct();
   }
 
   @override
   Widget build(BuildContext context) {
+    void NavigateToSearchScreen(String query) {
+      Navigator.pushReplacementNamed(context, SearchScreen.routeName,
+          arguments: query);
+    }
+
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(60),
@@ -98,24 +115,28 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        body: const SingleChildScrollView(
-          child: Column(
-            children: [
-              AddressBox(),
-              SizedBox(
-                height: 10,
-              ),
-              TopCategories(),
-              SizedBox(
-                height: 10,
-              ),
-              CarouselImage(),
-              SizedBox(
-                height: 10,
-              ),
-              DealOfDay(),
-            ],
-          ),
-        ));
+        body: products == null
+            ? const Loader()
+            : Column(
+                children: [
+                  const AddressBox(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                      child: ListView.builder(
+                          itemCount: products!.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, ProductDetailsScreen.routeName,
+                                      arguments: products![index]);
+                                },
+                                child:
+                                    SearchedProduct(product: products![index]));
+                          }))
+                ],
+              ));
   }
 }
